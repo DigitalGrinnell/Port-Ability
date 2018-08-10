@@ -1,0 +1,36 @@
+defaultEntryPoints = ["http", "https"]
+[web]
+address = ":8080"
+  [web.auth.basic]
+  users = ["admin:$apr1$LvBXFbG8$u8kbNVplrUY9qLQaQ9ZhA0"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+[acme]
+email = "admin@summittservices.com"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+onDemand = false
+[[acme.domains]]
+  main = "*.summittservices.com"
+  sans = ["admin.summittservices.com", "traefik.summittservices.com", "portainer.summittservices.com", "ohscribe.summittservices.com"]
+[[acme.domains]]
+  main = "*.horsetrailslesstraveled.com"
+  sans = ["horsetrailslesstraveled.com", "www.horsetrailslesstraveled.com"]
+[[acme.domains]]
+  main = "compassroseband.net"
+[[acme.domains]]
+  main = "thecompassroseband.net"
+[[acme.domains]]
+  main = "thecompassroseband.com"
+[[acme.domains]]
+  main = "wieting.tamatoledo.com" 
+[acme.httpChallenge]
+entryPoint = "http"
+delayBeforeCheck = 0

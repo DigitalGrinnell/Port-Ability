@@ -1,0 +1,5 @@
+websocket-client
+colorama
+requests==2.18.1
+docker
+docker-compose

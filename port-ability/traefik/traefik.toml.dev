@@ -1,0 +1,13 @@
+# traefik.toml.dev
+# http ONLY
+
+defaultEntryPoints = ["http"]
+
+[web]
+address = ":8080"
+  [web.auth.basic]
+  users = ["admin:$apr1$5yQOyTef$fhTtPO95n9XQbP3q0mR6m."]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"

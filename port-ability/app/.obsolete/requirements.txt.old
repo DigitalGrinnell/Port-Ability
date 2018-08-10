@@ -1,0 +1,4 @@
+docker==3.4.1
+websocket-client==0.48.0
+colorama==0.3.7
+docker-compose==1.22.0
