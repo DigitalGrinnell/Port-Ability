@@ -50,61 +50,66 @@ from colorama import init, Fore, Back, Style
 
 #--------------------------------
 def do_fix_permissions(target):
-  pass
+  global base_dir
+  
+  target_env = master_parser(target)
+  try:
+    target_env['DRUPAL_VERSION']
+  except KeyError:
+    yellow("{0} is not a Drupal stack and will be ignored.".format(target))
+    return
+  except:
+    unexpected()
+    raise
+  
+  drupal_path = target_env['STACKS'] + '/' + target_env['PROJECT_PATH'] +  '/html/web'
+  core = drupal_path + '/core/modules/system/system.module'
+  modules = drupal_path + '/modules/system/system.module'
+  sites = drupal_path + '/sites/' + target
+  
+  if not os.path.isdir(drupal_path) and not os.path.isfile(core) and not os.path.isfile(modules):
+    red("ERROR: Please provide a valid Drupal path.")
+    return
+    
+  try:
+    user = target_env['DRUPAL_USER']
+    group = target_env['HTTPD_GROUP']
+  except KeyError:
+    red("ERROR: DRUPAL_USER and HTTPD_GROUP must be defined in your .master.env file!")
+    return
+  except:
+    unexpected()
+    raise
 
-  # global base_dir
-  #
-  # target_env = master_parser(target)
-  # drupal_path = base_dir + target_env['PROJECT_PATH'] + '/html/web'
-  #
-    #   echo "drupal_path is: ${drupal_path}"
-    #
-    #   if [ -z "${drupal_path}" ] || [ ! -d "${drupal_path}/sites" ] || [ ! -f "${drupal_path}/core/modules/system/system.module" ] && [ ! -f "${drupal_path}/modules/system/system.module" ]; then
-    #     printf "**********************************************\n"
-    #     printf "* Error: Please provide a valid Drupal path. *\n"
-    #     printf "**********************************************\n"
-    #     exit 1
-    #   fi
-    #
-    #   if [ -z "${DRUPAL_USER}" ] || [[ $(id -un "${DRUPAL_USER}" 2> /dev/null) != "${DRUPAL_USER}" ]]; then
-    #     printf "***************************************\n"
-    #     printf "* Error: Please provide a valid user. *\n"
-    #     printf "***************************************\n"
-    #     exit 1
-    #   fi
-    #
-    #   cd $drupal_path
-    #   printf "Changing ownership of all contents of "${drupal_path}":\n user => "${DRUPAL_USER}" \t group => "${HTTPD_GROUP}"\n"
-    #   chown -R ${DRUPAL_USER}:${HTTPD_GROUP} .
-    #
-    #   printf "Changing permissions of all directories inside "${drupal_path}" to "rwxr-xr-x"...\n"
-    #   find . -type d -exec chmod u=rwx,g=rx,o=rx '{}' \;
-    #
-    #   printf "Changing permissions of all files inside "${drupal_path}" to "rw-r--r--"...\n"
-    #   find . -type f -exec chmod u=rw,g=r,o=r '{}' \;
-    #
-    #   printf "Changing permissions of "files" directories in "${drupal_path}/sites" to "rwxrwxr-x"...\n"
-    #   cd sites
-    #   find . -type d -name files -exec chmod ug=rwx,o=rx '{}' \;
-    #
-    #   printf "Changing permissions of all files inside all "files" directories in "${drupal_path}/sites" to "rw-rw-r-"...\n"
-    #   printf "Changing permissions of all directories inside all "files" directories in "${drupal_path}/sites" to "rwxrwxrwx"...\n"
-    #   for x in ./*/files; do
-    #     find ${x} -type d -exec chmod ugo=rwx '{}' \;
-    #     find ${x} -type f -exec chmod ug=rw,o=r '{}' \;
-    #   done
-    #
-    #   # Specials...
-    #
-    #   cd ${proj}/_sites/${site}/
-    #   printf "Changing permissions of "js" directory in "${dir}/files" to "rwxrwxrwx"...\n"
-    #   find . -type d -name files/js -exec chmod ugo=rwx '{}' \;
-    #
-    # done
-    #
-    # cd $wd
-    #
+  os.chdir(drupal_path)
+  
+  cmd = 'chown -R {0}:{1} .'.format(user, group)
+  normal("Changing ownership of '{0}' with '{1}'.".format(drupal_path, cmd))
+  os.system(cmd)
 
+  cmd = "find . -type d -exec chmod u=rwx,g=rx,o=rx '{}' \;"
+  normal("Changing permissions of all directories inside '{0}' to 'rwxr-xr-x'.".format(drupal_path))
+  os.system(cmd)
+
+  cmd = "find . -type f -exec chmod u=rw,g=r,o=r '{}' \;"
+  normal("Changing permissions of all files inside '{0}' to 'rw-r--r--'.".format(drupal_path))
+  os.system(cmd)
+
+  os.chdir(sites)
+
+  cmd = "find . -type d -exec chmod ugo=rwx '{}' \;"
+  normal("Changing permissions of all directories in '{0}' to 'rwxrwxrwx'.".format(sites))
+  os.system(cmd)
+
+  cmd = "find . -type f -exec chmod ug=rw,o=r '{}' \;"
+  normal("Changing permissions of files inside all of '{0}' to 'rw-rw-r--'.".format(sites))
+  os.system(cmd)
+
+  # Specials...
+
+  cmd = "find . -type d -name js -exec chmod ugo=rwx '{}' \;"
+  normal("Changing permissions of 'js' directory inside '{0}' to 'rwxrwxrwx'.".format(sites))
+  os.system(cmd)
 
 #--------------------------------
 def do_test(target):
