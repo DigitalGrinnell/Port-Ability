@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #--------------------------------------------------------------------------------------
-# port_ability.py      Modified: 2018-08-10 03:45:07
+# port_ability.py      Modified: 2018-08-10 04:22:39
 #
 # If Pythonized...
 #
@@ -489,6 +489,7 @@ if __name__ == "__main__":
     help='Target apps/sites to be processed')
   parser.add_argument('-v', '--verbosity', action='count', help='increase output verbosity (default: OFF)')
   parser.add_argument('--version', action='version', version=identify)
+  parser.add_argument('-p', action='store_false', help="turns off automatic Portainer inclusion")
   args = parser.parse_args( )
 
   # Set verbosity
@@ -523,7 +524,7 @@ if __name__ == "__main__":
     sys.exit(10)
 
   # If not specified, prepend 'portainer' to the list of targets.
-  if 'portainer' not in args.targets:
+  if not args.p and 'portainer' not in args.targets:
      args.targets.insert(0, 'portainer')
 
   # Loop through the specified targets...
