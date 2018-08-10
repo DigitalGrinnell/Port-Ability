@@ -4,7 +4,7 @@ This project is a copy of my earlier SummittServices.com (SS) project work.  It'
 
 ## Project Goal
 
-The goal of this project is to document and build, in Docker, a pair of stack "management" tools, namely _Traefik_ and _Portainer_, along with the ability to declare a home for application "stacks".  The stacks can be a mix of application types such as Python, Flask, Drupal versions 6, 6 and 8, etc.  The project should support easy local development (DEV), staging (STAGE), and deployment to production (PROD) environments.  Local (DEV) environments should be easily engaged with XDebug and IDEs like PyCharm and PHPStorm.  The deployed production services should be easy to encrypt for secure SSL/TLS access and suitable for occupying a single Docker-ready VPS of reasonable scale.  The configuration of this tool and the "stacks" it manages should be easy to define in a single file.
+The goal of this project is to build and document and build, in Docker, a pair of stack "management" tools, namely _Traefik_ and _Portainer_, along with the ability to declare a home for application "stacks".  The stacks can be a mix of application types such as Python, Flask, Drupal versions 6, 7 and 8, etc.  The project should support easy local development (DEV), staging (STAGE), and deployment to production (PROD) environments.  Local (DEV) environments should be easily engaged with XDebug and IDEs like PyCharm and PHPStorm.  The deployed production services should be easy to encrypt for secure SSL/TLS access and suitable for occupying a single Docker-ready VPS of reasonable scale.  The configuration of this tool and the "stacks" it manages should be easy to define in a single file.
 
 ## Project Structure
 
@@ -22,8 +22,8 @@ Port-Ability
   |--traefik.toml.dev
   |--traefik.toml.stage
   |--traefik.toml.prod
-|--_master
-  |--master.env.sample  
+|--_master  
+  | master.env.sample
 |--README.md
 ```
 
