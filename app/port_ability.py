@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #--------------------------------------------------------------------------------------
-# port_ability.py      Modified: 2018-08-10 04:22:39
+# port_ability.py      Modified: 2018-08-10 05:59:38
 #
 # If Pythonized...
 #
@@ -33,9 +33,9 @@
 #--------------------------------------------------------------------------------------
 
 #--- Config data here ----------------
-VERSION = "1.0"
+VERSION = "1.0.0"
 identify = "Port-Ability v{0}".format(VERSION)
-available_actions = ['test', 'stop', 'restart', 'backup']
+available_actions = ['test', 'stop', 'restart', 'backup', 'fix-permissions']
 
 import sys
 import argparse
@@ -47,6 +47,64 @@ import datetime
 import glob
 
 from colorama import init, Fore, Back, Style
+
+#--------------------------------
+def do_fix_permissions(target):
+  pass
+
+  # global base_dir
+  #
+  # target_env = master_parser(target)
+  # drupal_path = base_dir + target_env['PROJECT_PATH'] + '/html/web'
+  #
+    #   echo "drupal_path is: ${drupal_path}"
+    #
+    #   if [ -z "${drupal_path}" ] || [ ! -d "${drupal_path}/sites" ] || [ ! -f "${drupal_path}/core/modules/system/system.module" ] && [ ! -f "${drupal_path}/modules/system/system.module" ]; then
+    #     printf "**********************************************\n"
+    #     printf "* Error: Please provide a valid Drupal path. *\n"
+    #     printf "**********************************************\n"
+    #     exit 1
+    #   fi
+    #
+    #   if [ -z "${DRUPAL_USER}" ] || [[ $(id -un "${DRUPAL_USER}" 2> /dev/null) != "${DRUPAL_USER}" ]]; then
+    #     printf "***************************************\n"
+    #     printf "* Error: Please provide a valid user. *\n"
+    #     printf "***************************************\n"
+    #     exit 1
+    #   fi
+    #
+    #   cd $drupal_path
+    #   printf "Changing ownership of all contents of "${drupal_path}":\n user => "${DRUPAL_USER}" \t group => "${HTTPD_GROUP}"\n"
+    #   chown -R ${DRUPAL_USER}:${HTTPD_GROUP} .
+    #
+    #   printf "Changing permissions of all directories inside "${drupal_path}" to "rwxr-xr-x"...\n"
+    #   find . -type d -exec chmod u=rwx,g=rx,o=rx '{}' \;
+    #
+    #   printf "Changing permissions of all files inside "${drupal_path}" to "rw-r--r--"...\n"
+    #   find . -type f -exec chmod u=rw,g=r,o=r '{}' \;
+    #
+    #   printf "Changing permissions of "files" directories in "${drupal_path}/sites" to "rwxrwxr-x"...\n"
+    #   cd sites
+    #   find . -type d -name files -exec chmod ug=rwx,o=rx '{}' \;
+    #
+    #   printf "Changing permissions of all files inside all "files" directories in "${drupal_path}/sites" to "rw-rw-r-"...\n"
+    #   printf "Changing permissions of all directories inside all "files" directories in "${drupal_path}/sites" to "rwxrwxrwx"...\n"
+    #   for x in ./*/files; do
+    #     find ${x} -type d -exec chmod ugo=rwx '{}' \;
+    #     find ${x} -type f -exec chmod ug=rw,o=r '{}' \;
+    #   done
+    #
+    #   # Specials...
+    #
+    #   cd ${proj}/_sites/${site}/
+    #   printf "Changing permissions of "js" directory in "${dir}/files" to "rwxrwxrwx"...\n"
+    #   find . -type d -name files/js -exec chmod ugo=rwx '{}' \;
+    #
+    # done
+    #
+    # cd $wd
+    #
+
 
 #--------------------------------
 def do_test(target):
@@ -524,7 +582,7 @@ if __name__ == "__main__":
     sys.exit(10)
 
   # If not specified, prepend 'portainer' to the list of targets.
-  if not args.p and 'portainer' not in args.targets:
+  if args.p and 'portainer' not in args.targets:
      args.targets.insert(0, 'portainer')
 
   # Loop through the specified targets...
@@ -541,7 +599,10 @@ if __name__ == "__main__":
     if args.action[0] == 'restart':
       do_restart(target)
 
-    elif args.action[0] == 'backup':
+    if args.action[0] == 'fix-permissions':
+      do_fix_permissions(target)
+
+    if args.action[0] == 'backup':
       do_drupal_backup(target)
 
   # All done.  Set working directory back to original.

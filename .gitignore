@@ -1,0 +1,8 @@
+.master.env
+.env
+traefik/acme.json
+app/lib
+app/include
+app/bin
+app/pyvenv.cfg
+
