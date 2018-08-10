@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cwd=`pwd`
+cd ${HOME}/Port-Ability/app
+docker build -q -t port-ability-image .
+docker run -it --rm \
+  -e HOSTNAME=`hostname` \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v ${HOME}/Port-Ability/_stacks:/usr/src/Port-Ability/_stacks \
+  -v ${HOME}/Port-Ability/traefik:/usr/src/Port-Ability/traefik \
+  -v ${HOME}/Port-Ability/_master:/usr/src/Port-Ability/_master \
+  --name port-ability \
+  port-ability-image $@
+cd ${cwd}
