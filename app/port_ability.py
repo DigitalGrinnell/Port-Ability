@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #--------------------------------------------------------------------------------------
-# port_ability.py      Modified: 2018-08-07 15:48:49
+# port_ability.py      Modified: 2018-08-10 03:45:07
 #
 # If Pythonized...
 #
@@ -11,17 +11,17 @@
 #
 #   My command sequence was...
 #
-#     cd ~/Port-Ability
-#     mv -f app app-backup
-#     python3 -m venv app
-#     source app/bin/activate
+#     cd ~/Port-Ability; mv -f app app-backup; python3 -m venv app; source app/bin/activate
 #     rsync -aruvi app-backup/. app/ --exclude=bin --exclude=include --exclude=lib --exclude=pyvenv.cfg --progress
-#     rm -fr app-backup
-#     cd app
-#     curl https://bootstrap.pypa.io/get-pip.py | python
-#     pip install -r requirements.txt
+#     rm -fr app-backup; cd app; curl https://bootstrap.pypa.io/get-pip.py | python; pip install -r requirements.txt
+#
+#   Packaging and distribution of this utility should follow the guidance provided at
+#     https://packaging.python.org/tutorials/packaging-projects/
 #
 # If Dockerized...
+#
+#   CAUTION!!!  I was never able to get a "Dockerized" version of Port-Ability to work properly
+#   in all environements.  Enter at your own risk!
 #
 #   This Python3 application should be launched via Docker using the provided
 #   port-ability.sh Bash script, and Dockerfile.
@@ -521,6 +521,10 @@ if __name__ == "__main__":
   if args.action[0] not in available_actions:
     red("ERROR: Sorry, the specified action '{0}' is not available.".format(args.action[0]))
     sys.exit(10)
+
+  # If not specified, prepend 'portainer' to the list of targets.
+  if 'portainer' not in args.targets:
+     args.targets.insert(0, 'portainer')
 
   # Loop through the specified targets...
   for target in args.targets:
